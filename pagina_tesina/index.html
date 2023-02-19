@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--link css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.3.1/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.bootstrap.min.css">
+
+    <title>PRUEBA1</title>
+</head>
+
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="data:image/png;base64,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"
+                width="30" height="30" class="d-inline-block align-top" alt="">
+            Article description
+        </a>
+    </nav>
+
+    <!--content body-->
+    <div class="container col-sm-12">
+        <!--content add article-->
+        <div class="content-form col-sm-6">
+            <form>
+                <div class="form-group">
+                    <label for="article">Code article</label>
+                    <input type="text" class="form-control" id="article" placeholder="HGS-092">
+                </div>
+                <div class="form-group">
+                    <label for="selectEnterprise">Select Enterprise</label>
+                    <select class="form-control" id="selectEnterprise">
+                        <option disabled selected>Select enterprise</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" rows="6"></textarea>
+                </div>
+            </form>
+        </div>
+        <!--content datatable-->
+        <div class="content-table col-sm-6">
+            <table id="example" class="table table-striped table-bordered nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                        <th>Extn.</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tiger</td>
+                        <td>Nixon</td>
+                        <td>System Architect</td>
+                        <td>Edinburgh</td>
+                        <td>61</td>
+                        <td>2011-04-25</td>
+                        <td>$320,800</td>
+                        <td>5421</td>
+                        <td>t.nixon@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Garrett</td>
+                        <td>Winters</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>63</td>
+                        <td>2011-07-25</td>
+                        <td>$170,750</td>
+                        <td>8422</td>
+                        <td>g.winters@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Ashton</td>
+                        <td>Cox</td>
+                        <td>Junior Technical Author</td>
+                        <td>San Francisco</td>
+                        <td>66</td>
+                        <td>2009-01-12</td>
+                        <td>$86,000</td>
+                        <td>1562</td>
+                        <td>a.cox@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Cedric</td>
+                        <td>Kelly</td>
+                        <td>Senior Javascript Developer</td>
+                        <td>Edinburgh</td>
+                        <td>22</td>
+                        <td>2012-03-29</td>
+                        <td>$433,060</td>
+                        <td>6224</td>
+                        <td>c.kelly@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Airi</td>
+                        <td>Satou</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>33</td>
+                        <td>2008-11-28</td>
+                        <td>$162,700</td>
+                        <td>5407</td>
+                        <td>a.satou@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Brielle</td>
+                        <td>Williamson</td>
+                        <td>Integration Specialist</td>
+                        <td>New York</td>
+                        <td>61</td>
+                        <td>2012-12-02</td>
+                        <td>$372,000</td>
+                        <td>4804</td>
+                        <td>b.williamson@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Herrod</td>
+                        <td>Chandler</td>
+                        <td>Sales Assistant</td>
+                        <td>San Francisco</td>
+                        <td>59</td>
+                        <td>2012-08-06</td>
+                        <td>$137,500</td>
+                        <td>9608</td>
+                        <td>h.chandler@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Rhona</td>
+                        <td>Davidson</td>
+                        <td>Integration Specialist</td>
+                        <td>Tokyo</td>
+                        <td>55</td>
+                        <td>2010-10-14</td>
+                        <td>$327,900</td>
+                        <td>6200</td>
+                        <td>r.davidson@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Colleen</td>
+                        <td>Hurst</td>
+                        <td>Javascript Developer</td>
+                        <td>San Francisco</td>
+                        <td>39</td>
+                        <td>2009-09-15</td>
+                        <td>$205,500</td>
+                        <td>2360</td>
+                        <td>c.hurst@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Sonya</td>
+                        <td>Frost</td>
+                        <td>Software Engineer</td>
+                        <td>Edinburgh</td>
+                        <td>23</td>
+                        <td>2008-12-13</td>
+                        <td>$103,600</td>
+                        <td>1667</td>
+                        <td>s.frost@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Jena</td>
+                        <td>Gaines</td>
+                        <td>Office Manager</td>
+                        <td>London</td>
+                        <td>30</td>
+                        <td>2008-12-19</td>
+                        <td>$90,560</td>
+                        <td>3814</td>
+                        <td>j.gaines@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Quinn</td>
+                        <td>Flynn</td>
+                        <td>Support Lead</td>
+                        <td>Edinburgh</td>
+                        <td>22</td>
+                        <td>2013-03-03</td>
+                        <td>$342,000</td>
+                        <td>9497</td>
+                        <td>q.flynn@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Charde</td>
+                        <td>Marshall</td>
+                        <td>Regional Director</td>
+                        <td>San Francisco</td>
+                        <td>36</td>
+                        <td>2008-10-16</td>
+                        <td>$470,600</td>
+                        <td>6741</td>
+                        <td>c.marshall@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Haley</td>
+                        <td>Kennedy</td>
+                        <td>Senior Marketing Designer</td>
+                        <td>London</td>
+                        <td>43</td>
+                        <td>2012-12-18</td>
+                        <td>$313,500</td>
+                        <td>3597</td>
+                        <td>h.kennedy@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Tatyana</td>
+                        <td>Fitzpatrick</td>
+                        <td>Regional Director</td>
+                        <td>London</td>
+                        <td>19</td>
+                        <td>2010-03-17</td>
+                        <td>$385,750</td>
+                        <td>1965</td>
+                        <td>t.fitzpatrick@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Michael</td>
+                        <td>Silva</td>
+                        <td>Marketing Designer</td>
+                        <td>London</td>
+                        <td>66</td>
+                        <td>2012-11-27</td>
+                        <td>$198,500</td>
+                        <td>1581</td>
+                        <td>m.silva@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Paul</td>
+                        <td>Byrd</td>
+                        <td>Chief Financial Officer (CFO)</td>
+                        <td>New York</td>
+                        <td>64</td>
+                        <td>2010-06-09</td>
+                        <td>$725,000</td>
+                        <td>3059</td>
+                        <td>p.byrd@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Gloria</td>
+                        <td>Little</td>
+                        <td>Systems Administrator</td>
+                        <td>New York</td>
+                        <td>59</td>
+                        <td>2009-04-10</td>
+                        <td>$237,500</td>
+                        <td>1721</td>
+                        <td>g.little@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Bradley</td>
+                        <td>Greer</td>
+                        <td>Software Engineer</td>
+                        <td>London</td>
+                        <td>41</td>
+                        <td>2012-10-13</td>
+                        <td>$132,000</td>
+                        <td>2558</td>
+                        <td>b.greer@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Dai</td>
+                        <td>Rios</td>
+                        <td>Personnel Lead</td>
+                        <td>Edinburgh</td>
+                        <td>35</td>
+                        <td>2012-09-26</td>
+                        <td>$217,500</td>
+                        <td>2290</td>
+                        <td>d.rios@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Jenette</td>
+                        <td>Caldwell</td>
+                        <td>Development Lead</td>
+                        <td>New York</td>
+                        <td>30</td>
+                        <td>2011-09-03</td>
+                        <td>$345,000</td>
+                        <td>1937</td>
+                        <td>j.caldwell@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Yuri</td>
+                        <td>Berry</td>
+                        <td>Chief Marketing Officer (CMO)</td>
+                        <td>New York</td>
+                        <td>40</td>
+                        <td>2009-06-25</td>
+                        <td>$675,000</td>
+                        <td>6154</td>
+                        <td>y.berry@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Caesar</td>
+                        <td>Vance</td>
+                        <td>Pre-Sales Support</td>
+                        <td>New York</td>
+                        <td>21</td>
+                        <td>2011-12-12</td>
+                        <td>$106,450</td>
+                        <td>8330</td>
+                        <td>c.vance@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Doris</td>
+                        <td>Wilder</td>
+                        <td>Sales Assistant</td>
+                        <td>Sydney</td>
+                        <td>23</td>
+                        <td>2010-09-20</td>
+                        <td>$85,600</td>
+                        <td>3023</td>
+                        <td>d.wilder@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Angelica</td>
+                        <td>Ramos</td>
+                        <td>Chief Executive Officer (CEO)</td>
+                        <td>London</td>
+                        <td>47</td>
+                        <td>2009-10-09</td>
+                        <td>$1,200,000</td>
+                        <td>5797</td>
+                        <td>a.ramos@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Gavin</td>
+                        <td>Joyce</td>
+                        <td>Developer</td>
+                        <td>Edinburgh</td>
+                        <td>42</td>
+                        <td>2010-12-22</td>
+                        <td>$92,575</td>
+                        <td>8822</td>
+                        <td>g.joyce@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Jennifer</td>
+                        <td>Chang</td>
+                        <td>Regional Director</td>
+                        <td>Singapore</td>
+                        <td>28</td>
+                        <td>2010-11-14</td>
+                        <td>$357,650</td>
+                        <td>9239</td>
+                        <td>j.chang@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Brenden</td>
+                        <td>Wagner</td>
+                        <td>Software Engineer</td>
+                        <td>San Francisco</td>
+                        <td>28</td>
+                        <td>2011-06-07</td>
+                        <td>$206,850</td>
+                        <td>1314</td>
+                        <td>b.wagner@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Fiona</td>
+                        <td>Green</td>
+                        <td>Chief Operating Officer (COO)</td>
+                        <td>San Francisco</td>
+                        <td>48</td>
+                        <td>2010-03-11</td>
+                        <td>$850,000</td>
+                        <td>2947</td>
+                        <td>f.green@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Shou</td>
+                        <td>Itou</td>
+                        <td>Regional Marketing</td>
+                        <td>Tokyo</td>
+                        <td>20</td>
+                        <td>2011-08-14</td>
+                        <td>$163,000</td>
+                        <td>8899</td>
+                        <td>s.itou@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Michelle</td>
+                        <td>House</td>
+                        <td>Integration Specialist</td>
+                        <td>Sydney</td>
+                        <td>37</td>
+                        <td>2011-06-02</td>
+                        <td>$95,400</td>
+                        <td>2769</td>
+                        <td>m.house@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Suki</td>
+                        <td>Burks</td>
+                        <td>Developer</td>
+                        <td>London</td>
+                        <td>53</td>
+                        <td>2009-10-22</td>
+                        <td>$114,500</td>
+                        <td>6832</td>
+                        <td>s.burks@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Prescott</td>
+                        <td>Bartlett</td>
+                        <td>Technical Author</td>
+                        <td>London</td>
+                        <td>27</td>
+                        <td>2011-05-07</td>
+                        <td>$145,000</td>
+                        <td>3606</td>
+                        <td>p.bartlett@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Gavin</td>
+                        <td>Cortez</td>
+                        <td>Team Leader</td>
+                        <td>San Francisco</td>
+                        <td>22</td>
+                        <td>2008-10-26</td>
+                        <td>$235,500</td>
+                        <td>2860</td>
+                        <td>g.cortez@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Martena</td>
+                        <td>Mccray</td>
+                        <td>Post-Sales support</td>
+                        <td>Edinburgh</td>
+                        <td>46</td>
+                        <td>2011-03-09</td>
+                        <td>$324,050</td>
+                        <td>8240</td>
+                        <td>m.mccray@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Unity</td>
+                        <td>Butler</td>
+                        <td>Marketing Designer</td>
+                        <td>San Francisco</td>
+                        <td>47</td>
+                        <td>2009-12-09</td>
+                        <td>$85,675</td>
+                        <td>5384</td>
+                        <td>u.butler@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Howard</td>
+                        <td>Hatfield</td>
+                        <td>Office Manager</td>
+                        <td>San Francisco</td>
+                        <td>51</td>
+                        <td>2008-12-16</td>
+                        <td>$164,500</td>
+                        <td>7031</td>
+                        <td>h.hatfield@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Hope</td>
+                        <td>Fuentes</td>
+                        <td>Secretary</td>
+                        <td>San Francisco</td>
+                        <td>41</td>
+                        <td>2010-02-12</td>
+                        <td>$109,850</td>
+                        <td>6318</td>
+                        <td>h.fuentes@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Vivian</td>
+                        <td>Harrell</td>
+                        <td>Financial Controller</td>
+                        <td>San Francisco</td>
+                        <td>62</td>
+                        <td>2009-02-14</td>
+                        <td>$452,500</td>
+                        <td>9422</td>
+                        <td>v.harrell@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Timothy</td>
+                        <td>Mooney</td>
+                        <td>Office Manager</td>
+                        <td>London</td>
+                        <td>37</td>
+                        <td>2008-12-11</td>
+                        <td>$136,200</td>
+                        <td>7580</td>
+                        <td>t.mooney@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Jackson</td>
+                        <td>Bradshaw</td>
+                        <td>Director</td>
+                        <td>New York</td>
+                        <td>65</td>
+                        <td>2008-09-26</td>
+                        <td>$645,750</td>
+                        <td>1042</td>
+                        <td>j.bradshaw@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Olivia</td>
+                        <td>Liang</td>
+                        <td>Support Engineer</td>
+                        <td>Singapore</td>
+                        <td>64</td>
+                        <td>2011-02-03</td>
+                        <td>$234,500</td>
+                        <td>2120</td>
+                        <td>o.liang@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Bruno</td>
+                        <td>Nash</td>
+                        <td>Software Engineer</td>
+                        <td>London</td>
+                        <td>38</td>
+                        <td>2011-05-03</td>
+                        <td>$163,500</td>
+                        <td>6222</td>
+                        <td>b.nash@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Sakura</td>
+                        <td>Yamamoto</td>
+                        <td>Support Engineer</td>
+                        <td>Tokyo</td>
+                        <td>37</td>
+                        <td>2009-08-19</td>
+                        <td>$139,575</td>
+                        <td>9383</td>
+                        <td>s.yamamoto@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Thor</td>
+                        <td>Walton</td>
+                        <td>Developer</td>
+                        <td>New York</td>
+                        <td>61</td>
+                        <td>2013-08-11</td>
+                        <td>$98,540</td>
+                        <td>8327</td>
+                        <td>t.walton@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Finn</td>
+                        <td>Camacho</td>
+                        <td>Support Engineer</td>
+                        <td>San Francisco</td>
+                        <td>47</td>
+                        <td>2009-07-07</td>
+                        <td>$87,500</td>
+                        <td>2927</td>
+                        <td>f.camacho@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Serge</td>
+                        <td>Baldwin</td>
+                        <td>Data Coordinator</td>
+                        <td>Singapore</td>
+                        <td>64</td>
+                        <td>2012-04-09</td>
+                        <td>$138,575</td>
+                        <td>8352</td>
+                        <td>s.baldwin@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Zenaida</td>
+                        <td>Frank</td>
+                        <td>Software Engineer</td>
+                        <td>New York</td>
+                        <td>63</td>
+                        <td>2010-01-04</td>
+                        <td>$125,250</td>
+                        <td>7439</td>
+                        <td>z.frank@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Zorita</td>
+                        <td>Serrano</td>
+                        <td>Software Engineer</td>
+                        <td>San Francisco</td>
+                        <td>56</td>
+                        <td>2012-06-01</td>
+                        <td>$115,000</td>
+                        <td>4389</td>
+                        <td>z.serrano@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Jennifer</td>
+                        <td>Acosta</td>
+                        <td>Junior Javascript Developer</td>
+                        <td>Edinburgh</td>
+                        <td>43</td>
+                        <td>2013-02-01</td>
+                        <td>$75,650</td>
+                        <td>3431</td>
+                        <td>j.acosta@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Cara</td>
+                        <td>Stevens</td>
+                        <td>Sales Assistant</td>
+                        <td>New York</td>
+                        <td>46</td>
+                        <td>2011-12-06</td>
+                        <td>$145,600</td>
+                        <td>3990</td>
+                        <td>c.stevens@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Jonas</td>
+                        <td>Alexander</td>
+                        <td>Developer</td>
+                        <td>San Francisco</td>
+                        <td>30</td>
+                        <td>2010-07-14</td>
+                        <td>$86,500</td>
+                        <td>8196</td>
+                        <td>j.alexander@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Shad</td>
+                        <td>Decker</td>
+                        <td>Regional Director</td>
+                        <td>Edinburgh</td>
+                        <td>51</td>
+                        <td>2008-11-13</td>
+                        <td>$183,000</td>
+                        <td>6373</td>
+                        <td>s.decker@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Michael</td>
+                        <td>Bruce</td>
+                        <td>Javascript Developer</td>
+                        <td>Singapore</td>
+                        <td>29</td>
+                        <td>2011-06-27</td>
+                        <td>$183,000</td>
+                        <td>5384</td>
+                        <td>m.bruce@datatables.net</td>
+                    </tr>
+                    <tr>
+                        <td>Donna</td>
+                        <td>Snider</td>
+                        <td>Customer Support</td>
+                        <td>New York</td>
+                        <td>27</td>
+                        <td>2011-01-25</td>
+                        <td>$112,000</td>
+                        <td>4226</td>
+                        <td>d.snider@datatables.net</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+    <!--script js-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.3.1/js/dataTables.fixedHeader.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.0/js/responsive.bootstrap.min.js"></script>
+    <script src="./js/datatable.js"></script>
+</body>
+
+</html>
