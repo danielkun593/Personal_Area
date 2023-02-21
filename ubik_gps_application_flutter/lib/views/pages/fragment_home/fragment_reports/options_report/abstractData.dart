@@ -6,7 +6,10 @@ import 'package:ubik_gps_application_flutter/components/decorationBackground.dar
 import 'package:ubik_gps_application_flutter/src/models/sharedPreferencesClass.dart';
 
 class abstractData extends StatefulWidget {
-  const abstractData({Key key}) : super(key: key);
+  const abstractData({Key key, @required this.title, @required this.name}) : super(key: key);
+
+  final String title;
+  final String name;
 
   @override
   _abstractDataState createState() => _abstractDataState();
@@ -39,7 +42,7 @@ class _abstractDataState extends State<abstractData> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: Column(
-            children: [Text(name), const Text('Resumen')],
+            children: [Text(widget.name), Text(widget.title)],
           ),
           centerTitle: true,
           titleTextStyle: const TextStyle(

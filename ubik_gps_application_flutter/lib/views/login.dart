@@ -1,14 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:ubik_gps_application_flutter/components/buttonDesign.dart';
 import 'package:ubik_gps_application_flutter/components/buttonIconDesign.dart';
 import 'package:ubik_gps_application_flutter/components/decorationBackground.dart';
 import 'package:ubik_gps_application_flutter/components/editTextField.dart';
 import 'package:ubik_gps_application_flutter/components/logoWidget.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_login.dart';
-import 'package:ubik_gps_application_flutter/src/functions/api_ubik.dart';
-import 'package:ubik_gps_application_flutter/src/models/sharedPreferencesClass.dart';
 import 'package:ubik_gps_application_flutter/views/forgetPassword.dart';
 import 'package:ubik_gps_application_flutter/views/register_user.dart';
 import 'package:ubik_gps_application_flutter/views/splashPage.dart';
@@ -21,7 +20,7 @@ class Login extends StatefulWidget {
 
 class LoginState extends State<Login> {
   String _email, _password;
-  bool emailCorrect = true;
+  //bool emailCorrect = true;
   ApiLogin connectLogin = ApiLogin();
   bool isInAsyncCall = false;
   bool loginSucces = false;
@@ -29,7 +28,6 @@ class LoginState extends State<Login> {
 
   final email = TextEditingController();
   final password = TextEditingController();
-  UserPreferences userPreferences = UserPreferences();
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +59,7 @@ class LoginState extends State<Login> {
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: GestureDetector(
                           onTap: () {
-                            setState(() {
-                              obscureText = !obscureText;
-                            });
+                            setState(()=> obscureText = !obscureText);
                           },
                           child: Icon(obscureText ? Icons.visibility : Icons.visibility_off, size: 30),
                         ),
@@ -83,7 +79,11 @@ class LoginState extends State<Login> {
                           const Text("Inicio de sesion", style: TextStyle(fontSize: 33, fontWeight: FontWeight.w700, color: Colors.white)),
                           ButtonIconWidget(
                             namebutton: '',
-                            function: (){setState((){logIn();});},
+                            function: () {
+                              _email = email.text;
+                              _password = password.text;
+                              logIn(http.Client(), _email, _password);
+                            },
                             iconData: Icons.login,
                             size: 50,
                             circular: 20,
@@ -101,9 +101,7 @@ class LoginState extends State<Login> {
                           Flexible(
                             flex: 1,
                             child: ButtonWidget(
-                              function: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ForgetPassword()));
-                              },
+                              function: ()=> Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ForgetPassword())),
                               height: 10,
                               width: 5,
                               circular: 15,
@@ -115,9 +113,7 @@ class LoginState extends State<Login> {
                           Flexible(
                             flex: 1,
                             child: ButtonWidget(
-                              function: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> const Register()));
-                              },
+                              function: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> const Register())),
                               height: 10,
                               width: 5,
                               circular: 15,
@@ -140,8 +136,7 @@ class LoginState extends State<Login> {
                               Icons.translate,
                               color: Colors.white,
                             ),
-                            label: const Text(
-                              "Español",
+                            label: const Text("Español",
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                             style: OutlinedButton.styleFrom(
@@ -161,12 +156,9 @@ class LoginState extends State<Login> {
       ),
     );
   }
-  logIn() async {
+  logIn(http.Client client, String e, String p) async {
     isInAsyncCall = true;
-    _email = email.text;
-    _password = password.text;
-    userPreferences.setEmail(_email);
-    userPreferences.setPassword(_password);
+
     if (_email.isEmpty && _password.isEmpty) {
       showDialog(
           context: context,
@@ -175,13 +167,12 @@ class LoginState extends State<Login> {
                 content: const Text("Campos correo y contraseña son requeridos"),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: ()=> Navigator.pop(context),
                       child: const Text("Cerrar")),
                 ],
               ));
-    } else if (_email.isEmpty) {
+    }
+    else if (_email.isEmpty) {
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -189,13 +180,12 @@ class LoginState extends State<Login> {
                 content: const Text("Campo correo es requerido\nIngrese su correo e intente nuevamente"),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: ()=> Navigator.pop(context),
                       child: const Text("Cerrar")),
                 ],
               ));
-    } else if (_password.isEmpty) {
+    }
+    else if (_password.isEmpty) {
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -203,17 +193,18 @@ class LoginState extends State<Login> {
                 content: const Text("Campo contraseña requerido\nVerifique sus datos e intente nuevamente"),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Cerrar")),
+                      onPressed: ()=> Navigator.pop(context),
+                      child: const Text("Cerrar"))
                 ],
-              ));
-    } else {
-      loginSucces = await connectLogin.logIn(_email, _password);
+          )
+      );
+    }
+    else {
+      loginSucces = await connectLogin.logIn(client, e, p);
       if (loginSucces == true) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashPage()));
-      } else if (loginSucces == false) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashPage(email: e, password: p)));
+      }
+      else if (loginSucces == false) {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -221,12 +212,11 @@ class LoginState extends State<Login> {
                   content: const Text("Campos de correo y/o contraseña incorrectos\nVerifique sus datos e intente nuevamente"),
                   actions: [
                     TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                        onPressed: ()=> Navigator.pop(context),
                         child: const Text("Close")),
-                  ],
-                ));
+                  ]
+            )
+        );
       }
     }
     isInAsyncCall = false;

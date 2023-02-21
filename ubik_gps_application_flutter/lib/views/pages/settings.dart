@@ -1,11 +1,15 @@
 // ignore_for_file: non_constant_identifier_names
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:ubik_gps_application_flutter/components/decorationBackground.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_caller.dart';
 import 'package:ubik_gps_application_flutter/src/models/sharedPreferencesClass.dart';
 import 'package:ubik_gps_application_flutter/views/pages/fragment_home/add_background.dart';
 class Settings extends StatefulWidget {
-  const Settings({Key key}) : super(key: key);
+  const Settings({Key key, @required this.email, @required this.password}) : super(key: key);
+
+  final String email;
+  final String password;
 
   @override
   SettingsState createState() => SettingsState();
@@ -13,7 +17,7 @@ class Settings extends StatefulWidget {
 
 class SettingsState extends State<Settings> {
   ApiCall caller = ApiCall();
-  String name = '';
+  String name = 'GABRIEL MERIZALDE';
   UserPreferences userPreferences = UserPreferences();
   String deviceMap;
   List deviceItemMap = ["Device1", "Device2", "Device3", "Device4", "Device5"];
@@ -34,33 +38,17 @@ class SettingsState extends State<Settings> {
   int contadorKm = 30;
   var numberLamina = "0991331603";
 
-  Future<void> mostrarDatos() async {
-    final userName = await userPreferences.getName();
-    setState(() => name = userName);
-  }
 
   @override
   void initState() {
-    mostrarDatos();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(5),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-            colors: [
-              Color(0xff170101),
-              Color(0xFF360505),
-              Color(0xFF490C0C),
-              Color(0xff980d0d),
-              Color(0xffbb0404),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter
-        ),
-      ),
+      decoration: DecorationBack.backgroundGradient,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
@@ -98,14 +86,12 @@ class SettingsState extends State<Settings> {
                           children: [
                             const Icon(Icons.dark_mode, size: 30),
                             const Text('Modo Oscuro', softWrap: true, style: TextStyle(fontSize: 20)),
-                            Switch.adaptive(
-                              value: swithch, activeColor: Colors.greenAccent,
-                              onChanged: (bool value){
-                                setState((){
-                                  swithch = value;
-                                });
-                              },
-                            )
+                            Switch(value: swithch, onChanged: (bool value){
+                              setState((){
+                                swithch = value;
+                                print(swithch);
+                              });
+                            })
                           ],
                         ),
                       ),

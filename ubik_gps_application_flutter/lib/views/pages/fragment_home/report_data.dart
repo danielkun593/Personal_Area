@@ -6,12 +6,17 @@ import 'package:ubik_gps_application_flutter/views/pages/fragment_home/fragment_
 import 'package:ubik_gps_application_flutter/views/pages/fragment_home/fragment_reports/otherReportData.dart';
 
 class ReportsData extends StatefulWidget {
-  const ReportsData({Key key}) : super(key: key);
+  const ReportsData({Key key, @required this.token, @required this.name}) : super(key: key);
+
+  final String token;
+  final String name;
+
   @override
   State<ReportsData> createState() => _ReportsDataState();
 }
 
 class _ReportsDataState extends State<ReportsData> {
+
   Icon iconSearch = const Icon(Icons.search, size: 30);
   Widget searchBar = const Text("REPORTES");
 
@@ -71,13 +76,13 @@ class _ReportsDataState extends State<ReportsData> {
                 const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
-        body: const TabBarView(
-          physics: ScrollPhysics(),
+        body: TabBarView(
+          physics: const ScrollPhysics(),
           children: [
-            allReport(),
-            onlineReport(),
-            offlineReport(),
-            otherReport()
+            allReport(token: widget.token, name: widget.name),
+            onlineReport(token: widget.token, name: widget.name),
+            offlineReport(token: widget.token, name: widget.name),
+            otherReport(token: widget.token, name: widget.name)
           ],
         ),
       ),

@@ -144,6 +144,8 @@ class _ParkingDeviceState extends State<ParkingDevice>{
                                   ),
                                 )
                               ]),
+                          const SizedBox(height: 10),
+                          const Divider(color: Colors.black),
                           const SizedBox(height: 25),
                           const Text("CERCA VIRTUAL", softWrap: true, textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 30)),

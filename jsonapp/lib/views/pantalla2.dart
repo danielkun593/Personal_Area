@@ -45,7 +45,7 @@ class UserList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int index = 0;
+
     return Center(
       child: SizedBox(
         height: 150,
@@ -53,7 +53,7 @@ class UserList extends StatelessWidget {
         child: Card(
           elevation: 15,
           child: Center(
-            child: Text("Bienvenido ${usuario[index].name}, \ntiene ${usuario[index].notifications} notificaciones pendientes",
+            child: Text("Bienvenido ${usuario.single.name}, \ntiene ${usuario.single.notifications} notificaciones pendientes",
                 softWrap: true, textAlign: TextAlign.justify, style: const TextStyle(fontSize: 20)),
           ),
         ),

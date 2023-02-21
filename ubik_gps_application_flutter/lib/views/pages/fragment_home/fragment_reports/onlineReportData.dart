@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, library_private_types_in_public_api, camel_case_types
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -11,7 +12,10 @@ import 'package:ubik_gps_application_flutter/views/pages/fragment_home/fragment_
 import 'package:ubik_gps_application_flutter/views/pages/fragment_home/fragment_reports/options_report/reportsData.dart';
 
 class onlineReport extends StatefulWidget {
-  const onlineReport({Key key}) : super(key: key);
+  const onlineReport({Key key, @required this.token, @required this.name}) : super(key: key);
+
+  final String token;
+  final String name;
 
   @override
   _onlineReportState createState() => _onlineReportState();
@@ -41,10 +45,10 @@ class _onlineReportState extends State<onlineReport> {
   @override
   void initState() {
     super.initState();
-    listDispotivos = deviceApi.deviceUser();
+    listDispotivos = deviceApi.deviceUser(http.Client(), widget.token);
   }
 
-  List<Widget> listDispositivos(List<Device> data) {
+  List<Widget> listDispositivos(List<Device> data, String username) {
     List<Widget> listWidget = [];
     for (var item in data) {
       if(item.statusDevice == "online"){
@@ -67,8 +71,8 @@ class _onlineReportState extends State<onlineReport> {
                           const SizedBox(width: 20),
                           Text(item.name_user),
                           SizedBox(width: MediaQuery.of(context).size.width*0.3),
-                          item.statusDevice == 'online' ? const Icon(Icons.circle, color: Colors.green) : const Icon(Icons.circle, color: Colors.red,
-                          ),
+                          item.statusDevice == 'online' ? const Icon(Icons.circle, color: Colors.green) :
+                          item.statusDevice == 'offline' ? const Icon(Icons.circle, color: Colors.red) : const Icon(Icons.circle, color: Colors.black),
                           const SizedBox(width: 10),
                           Text(item.statusDevice),
                         ],
@@ -109,14 +113,13 @@ class _onlineReportState extends State<onlineReport> {
                           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), topLeft: Radius.circular(5)),
                         ))),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const abstractData()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => abstractData(title: "RESUMEN", name: username)));
                     },
                     icon: const Icon(
                       Icons.receipt,
                       color: Colors.white,
                     ),
-                    label: const Text(
-                      "RESUMEN",
+                    label: const Text("RESUMEN",
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
@@ -159,7 +162,7 @@ class _onlineReportState extends State<onlineReport> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView(
-                      children: listDispositivos(snapshot.data)
+                      children: listDispositivos(snapshot.data, widget.name)
                   );
                 } else if (snapshot.hasError) {
                   return Container();
