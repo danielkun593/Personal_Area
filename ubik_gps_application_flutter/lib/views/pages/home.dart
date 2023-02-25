@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, use_build_context_synchronously, missing_required_param, avoid_print
+// ignore_for_file: public_member_api_docs, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, use_build_context_synchronously, missing_required_param, avoid_print, must_be_immutable, sdk_version_ui_as_code
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -28,6 +28,7 @@ import 'package:ubik_gps_application_flutter/views/pages/fragment_home/renew_pla
 import 'package:ubik_gps_application_flutter/views/pages/fragment_home/report_data.dart';
 import 'package:ubik_gps_application_flutter/views/pages/fragment_home/smartcare.dart';
 
+//CLASS INIT APP
 class Home extends StatefulWidget {
   const Home({Key key, @required this.email, @required this.password}) : super(key: key);
 
@@ -44,7 +45,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height*0.04,
+        left: 5, right: 5, bottom: 5
+      ),
       decoration: DecorationBack.backgroundGradient,
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -62,6 +66,7 @@ class _HomeState extends State<Home> {
   }
 }
 
+//HOMEPAGE WITH SATELESSWIDGET USING FUNCTION FOR GET DATA USER
 class Homepage extends StatelessWidget {
   const Homepage({Key key, @required this.user}) : super(key: key);
 
@@ -70,16 +75,14 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget compose;
-    String name = '';
     ApiUbik connectService = ApiUbik();
     ApiIdentificationDevice identificationDevice = ApiIdentificationDevice();
-    ApiDeviced deviceid = ApiDeviced(); ApiLogin userdata = ApiLogin();
+    ApiDeviced deviceid = ApiDeviced();
+    ApiLogin userdata = ApiLogin();
     ApiCall caller = ApiCall();
     ApiAssesor assesor = ApiAssesor();
     ApiWhatsapp whatsapp = ApiWhatsapp();
 
-    UserPreferences userPreferences = UserPreferences();
-    Future<List<Usuario>> listData;
     bool commandSend = false;
     LatLng punto;
     String _currentAddress;
@@ -157,6 +160,15 @@ class Homepage extends StatelessWidget {
       );
       return cardCarga;
     }
+    Loading(){
+      Widget dropdown;
+      dropdown = const SizedBox(
+        height: 230,
+        width: 450,
+        child: Center(child: CircularProgressIndicator()),
+      );
+      return dropdown;
+    }
 
 
     Future<void> _getAddressPosition(Position position) async {
@@ -198,15 +210,6 @@ class Homepage extends StatelessWidget {
     }
     bool statusCommand;
     String deviceListen, deviceOpen, deviceParking;
-
-    inforUser(List<Usuario> data) {
-      Widget mensaje;
-      for (var x in data) {
-        mensaje = Text("Bienvenido ${x.name}, \ntiene ${x.notifications} notificaciones pendientes",
-            softWrap: true, textAlign: TextAlign.justify, style: const TextStyle(fontSize: 20));
-      }
-      return mensaje;
-    }
 
     for(var i in user){
       compose = Column(
@@ -255,10 +258,7 @@ class Homepage extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     flex: 2,
-                                    child: Image.asset(
-                                      'images/alert.png',
-                                      color: Colors.white,
-                                    ),
+                                    child: Image.asset('images/alert.png', color: Colors.white,),
                                   ),
                                   const Expanded(
                                       flex: 1,
@@ -303,16 +303,13 @@ class Homepage extends StatelessWidget {
                             children: [
                               Expanded(
                                 flex: 1,
-                                child: Image.asset(
-                                  'images/smart_care.png',
-                                  //height: 150, width: 140,
-                                ),
+                                child: Image.asset('images/smart_care.png'),
                               ),
                             ],
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const SmartCare()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SmartCare(token: i.jwt)));
                         },
                       ),
                     ),
@@ -351,96 +348,17 @@ class Homepage extends StatelessWidget {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                   title: const Text("ESCUCHAR DISPOSITIVO",
                                       textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
-                                  content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                                    return SizedBox(
-                                      height: 150,
-                                      width: 450,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 10, right: 5, left: 5, bottom: 1),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(5),
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(color: Colors.grey, width: 1),
-                                                  borderRadius: BorderRadius.circular(5)),
-                                              child: DropdownButton(
-                                                hint: const Text("Seleccione vehiculo"),
-                                                icon: const Icon(Icons.arrow_drop_down),
-                                                iconSize: 35,
-                                                isExpanded: true,
-                                                underline: Container(),
-                                                value: deviceListen,
-                                                style: const TextStyle(fontSize: 20, color: Colors.grey),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    deviceListen = value;
-                                                  });
-                                                },
-                                                alignment: AlignmentDirectional.centerStart,
-                                                items: deviceItemList.map((valueItem) {
-                                                  return DropdownMenuItem(value: valueItem, child: Text(valueItem));
-                                                }).toList(),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 15),
-                                            Container(
-                                              padding: const EdgeInsets.only(right: 15, left: 15),
-                                              child: const Text("Pon limites a tu carro, hasta donde puede andar libremente",
-                                                  softWrap: true,
-                                                  textAlign: TextAlign.justify,
-                                                  style: TextStyle(color: Colors.grey, fontSize: 20)),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                  actions: [
-                                    ButtonBar(
-                                      alignment: MainAxisAlignment.center,
-                                      children: [
-                                        Flexible(
-                                          flex: 1,
-                                          fit: FlexFit.tight,
-                                          child: ButtonWidget(
-                                            function: (){},
-                                            namebutton: "Activar",
-                                            height: 15,
-                                            width: 30,
-                                            circular: 10,
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                        Flexible(
-                                          flex: 1,
-                                          fit: FlexFit.tight,
-                                          child: ButtonWidget(
-                                            function: (){},
-                                            namebutton: "Desactivar",
-                                            height: 15,
-                                            width: 15,
-                                            circular: 10,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                        Flexible(
-                                          flex: 1,
-                                          fit: FlexFit.tight,
-                                          child: ButtonWidget(
-                                            function: (){},
-                                            namebutton: "Grabar",
-                                            height: 15,
-                                            width: 30,
-                                            circular: 10,
-                                            color: Colors.orange,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: MediaQuery.of(context).size.height*0.02),
-                                  ],
+                                  content: FutureBuilder(
+                                    future: deviceid.getAllDevice(http.Client(), i.jwt),
+                                    builder: (ctx, snapshot){
+                                      if(snapshot.hasData){
+                                        return Dropdownbutton(listDevice: snapshot.data);
+                                      }else if(snapshot.hasError){
+                                        return Text("Error");
+                                      }
+                                      return Loading();
+                                    },
+                                  )
                                 );
                               });
                         },
@@ -569,7 +487,7 @@ class Homepage extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const RenewPlan()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RenewPlan(token: i.jwt)));
                         },
                       ),
                     ),
@@ -865,7 +783,7 @@ class Homepage extends StatelessWidget {
                                               const SizedBox(height: 10),
                                               ButtonWidget(
                                                 function: (){
-                                                  listAsessor = assesor.asesorUser(typeAsesoria[1]);
+                                                  //listAsessor = assesor.asesorUser(typeAsesoria[1]);
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) => AlertDialog(
@@ -874,7 +792,7 @@ class Homepage extends StatelessWidget {
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
                                                         content: FutureBuilder(
-                                                            future: listAsessor,
+                                                            future: assesor.asesorUser(http.Client(), typeAsesoria[1], i.jwt),
                                                             builder: (ctx, snapshot){
                                                               if(snapshot.hasData){
                                                                 return infoAsesor(snapshot.data);
@@ -915,7 +833,7 @@ class Homepage extends StatelessWidget {
                                               const SizedBox(height: 10),
                                               ButtonWidget(
                                                 function: (){
-                                                  listAsessor = assesor.asesorUser(typeAsesoria[0]);
+                                                  //listAsessor = assesor.asesorUser(typeAsesoria[0]);
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) => AlertDialog(
@@ -924,7 +842,7 @@ class Homepage extends StatelessWidget {
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
                                                         content: FutureBuilder(
-                                                            future: listAsessor,
+                                                            future: assesor.asesorUser(http.Client(), typeAsesoria[0], i.jwt),
                                                             builder: (ctx, snapshot){
                                                               if(snapshot.hasData){
                                                                 return infoAsesor(snapshot.data);
@@ -960,7 +878,7 @@ class Homepage extends StatelessWidget {
                                               const SizedBox(height: 10),
                                               ButtonWidget(
                                                 function: (){
-                                                  listAsessor = assesor.asesorUser(typeAsesoria[2]);
+                                                  //listAsessor = assesor.asesorUser(typeAsesoria[2]);
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) => AlertDialog(
@@ -969,7 +887,7 @@ class Homepage extends StatelessWidget {
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
                                                         content: FutureBuilder(
-                                                            future: listAsessor,
+                                                            future: assesor.asesorUser(http.Client(), typeAsesoria[2], i.jwt),
                                                             builder: (ctx, snapshot){
                                                               if(snapshot.hasData){
                                                                 return infoAsesor(snapshot.data);
@@ -1131,8 +1049,114 @@ class Homepage extends StatelessWidget {
         ],
       );
     }
-
     return compose;
   }
+
 }
 
+
+//FUNCTION FOR BUTTON LISTEN IN HOMEPAGE WITH STATEFULWIDGET
+class Dropdownbutton extends StatelessWidget {
+  const Dropdownbutton({Key key, @required this.listDevice}) : super(key: key);
+
+  final List<AllDevice> listDevice;
+
+  @override
+  Widget build(BuildContext context) {
+    String device;
+    List<String> listStringDevice;
+
+    for(int i=0; i<listDevice.length; i++){
+      listStringDevice.add(listDevice[i].deviceId);
+    }
+
+    return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+      return SizedBox(
+        height: 230,
+        width: 450,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10, right: 5, left: 5, bottom: 1),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(5)),
+                child: DropdownButton(
+                  hint: const Text("Seleccione vehiculo"),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  iconSize: 35,
+                  isExpanded: true,
+                  underline: Container(),
+                  value: device,
+                  style: const TextStyle(fontSize: 20, color: Colors.grey),
+                  onChanged: (value) {
+                    setState(() {
+                      device = value;
+                    });
+                  },
+                  alignment: AlignmentDirectional.centerStart,
+                  items: listStringDevice.map((e){
+                    return DropdownMenuItem(value: e, child: Text(e));
+                  }).toList()
+                ),
+              ),
+              const SizedBox(height: 15),
+              Container(
+                padding: const EdgeInsets.only(right: 15, left: 15),
+                child: const Text("Pon limites a tu carro, hasta donde puede andar libremente",
+                    softWrap: true,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(color: Colors.grey, fontSize: 20)),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.02),
+              ButtonBar(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: ButtonWidget(
+                      function: (){},
+                      namebutton: "Activar",
+                      height: 15,
+                      width: 30,
+                      circular: 10,
+                      color: Colors.green,
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: ButtonWidget(
+                      function: (){},
+                      namebutton: "Desactivar",
+                      height: 15,
+                      width: 15,
+                      circular: 10,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: ButtonWidget(
+                      function: (){},
+                      namebutton: "Grabar",
+                      height: 15,
+                      width: 30,
+                      circular: 10,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height*0.02),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}

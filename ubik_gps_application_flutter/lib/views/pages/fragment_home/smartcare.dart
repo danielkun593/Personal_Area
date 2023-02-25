@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use, library_private_types_in_public_api, non_constant_identifier_names
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:ubik_gps_application_flutter/components/buttonDesign.dart';
 import 'package:ubik_gps_application_flutter/components/circularButton.dart';
 import 'package:ubik_gps_application_flutter/components/decorationBackground.dart';
@@ -7,14 +8,15 @@ import 'package:ubik_gps_application_flutter/components/textString.dart';
 import 'package:ubik_gps_application_flutter/icons/icon_create.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_assesorlist.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_caller.dart';
-import 'package:ubik_gps_application_flutter/src/functions/api_ubik.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_whatsapplink.dart';
 import 'package:ubik_gps_application_flutter/src/models/getAsessor.dart';
 import 'package:ubik_gps_application_flutter/views/pages/fragment_home/fragment_smart_care/add_car.dart';
 import 'package:ubik_gps_application_flutter/views/pages/fragment_home/fragment_smart_care/buy_car.dart';
 
 class SmartCare extends StatefulWidget {
-  const SmartCare({Key key}) : super(key: key);
+  const SmartCare({Key key, @required this.token}) : super(key: key);
+
+  final String token;
 
   @override
   _SmartCareState createState() => _SmartCareState();
@@ -67,10 +69,10 @@ class _SmartCareState extends State<SmartCare> {
                         size: 50,
                       ),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 1,
                       child: CircularButton(
-                        function: (){},
+                        function: null,
                         color: Colors.red,
                         iconData: Icons.edit_document,
                         nameButton: "Formulario",
@@ -162,7 +164,7 @@ class _SmartCareState extends State<SmartCare> {
                                             ButtonWidget(
                                               function: (){
                                                 setState((){
-                                                  listAsessor = connect_api.asesorUser(typeAsesoria[0]);
+                                                  //listAsessor = connect_api.asesorUser(http.Client(), typeAsesoria[0], widget.token);
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) => AlertDialog(
@@ -170,8 +172,8 @@ class _SmartCareState extends State<SmartCare> {
                                                         title: const Text("ASESORIA JURIDICA EN SINISTRO",
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
-                                                        content: FutureBuilder(
-                                                            future: listAsessor,
+                                                        content: FutureBuilder<List<Assesor>>(
+                                                            future: connect_api.asesorUser(http.Client(), typeAsesoria[0], widget.token),
                                                             builder: (ctx, snapshot){
                                                               if(snapshot.hasData){
                                                                 return infoAsesor(snapshot.data);
@@ -239,7 +241,7 @@ class _SmartCareState extends State<SmartCare> {
                                         ButtonWidget(
                                           function: (){
                                             setState((){
-                                              listAsessor = connect_api.asesorUser(typeAsesoria[1]);
+                                              //listAsessor = connect_api.asesorUser(typeAsesoria[1]);
                                               showDialog(
                                                   context: context,
                                                   builder: (context) => AlertDialog(
@@ -250,8 +252,8 @@ class _SmartCareState extends State<SmartCare> {
                                                     content: SizedBox(
                                                       height: 225,
                                                       width: 375,
-                                                      child: FutureBuilder(
-                                                          future: listAsessor,
+                                                      child: FutureBuilder<List<Assesor>>(
+                                                          future: connect_api.asesorUser(http.Client(), typeAsesoria[1], widget.token),
                                                           builder: (ctx, snapshot){
                                                             if(snapshot.hasData){
                                                               return infoAsesor(snapshot.data);
@@ -425,7 +427,7 @@ class _SmartCareState extends State<SmartCare> {
                                         ButtonWidget(
                                           function: (){
                                             setState(() {
-                                              listAsessor = connect_api.asesorUser(typeAsesoria[2]);
+                                              //listAsessor = connect_api.asesorUser(typeAsesoria[2]);
                                               showDialog(
                                                   context: context,
                                                   builder: (context) => AlertDialog(
@@ -433,8 +435,8 @@ class _SmartCareState extends State<SmartCare> {
                                                     title: const Text("ASESORIA MECANICA Y COLISIONES",
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
-                                                    content: FutureBuilder(
-                                                        future: listAsessor,
+                                                    content: FutureBuilder<List<Assesor>>(
+                                                        future: connect_api.asesorUser(http.Client(), typeAsesoria[2], widget.token),
                                                         builder: (ctx, snapshot){
                                                           if(snapshot.hasData){
                                                             return infoAsesor(snapshot.data);
@@ -500,7 +502,7 @@ class _SmartCareState extends State<SmartCare> {
                                         ButtonWidget(
                                           function: (){
                                             setState(() {
-                                              listAsessor = connect_api.asesorUser(typeAsesoria[3]);
+                                              //listAsessor = connect_api.asesorUser(typeAsesoria[3]);
                                               showDialog(
                                                   context: context,
                                                   builder: (context) => AlertDialog(
@@ -508,8 +510,8 @@ class _SmartCareState extends State<SmartCare> {
                                                     title: const Text("BOTON DE EMERGENCIA MEDICA",
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
-                                                    content: FutureBuilder(
-                                                        future: listAsessor,
+                                                    content: FutureBuilder<List<Assesor>>(
+                                                        future: connect_api.asesorUser(http.Client(), typeAsesoria[3], widget.token),
                                                         builder: (ctx, snapshot){
                                                           if(snapshot.hasData){
                                                             return infoAsesor(snapshot.data);

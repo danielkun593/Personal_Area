@@ -2,30 +2,24 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:ubik_gps_application_flutter/src/models/getAsessor.dart';
-import 'package:ubik_gps_application_flutter/src/models/sharedPreferencesClass.dart';
 
 class ApiAssesor{
-  UserPreferences userPreferences = UserPreferences();
 
   //GET ASSESORS API
-  Future<List<Assesor>> asesorUser(String typeAssesor) async{
-    List<Assesor> asesores = [];
-    var token = await userPreferences.getToken();
+  Future<List<Assesor>> asesorUser(http.Client client, String typeAssesor, String token) async{
     var url = "http://159.89.83.60:8080/SmartCare/11/$typeAssesor";
-    var dataHeader = {
-      HttpHeaders.authorizationHeader: "Bearer $token",
-      HttpHeaders.acceptLanguageHeader:"en-US"
-    };
+    var dataHeader = {HttpHeaders.authorizationHeader: "Bearer $token"};
     final response = await http.get(Uri.parse(url), headers: dataHeader);
-    if(response.statusCode == 200){
-      var jsonData = jsonDecode(response.body);
-      print(jsonData);
-      for(var a in jsonData['response']){
-        asesores.add(Assesor(a['nombre'], a['telefono'], a['correo'], a['asesoria']));
-      }
-      return asesores;
-    }
+    final jsonDataOne = jsonDecode(response.body);
+    final jsonDataTwo = jsonEncode(jsonDataOne['response']);
+    print(jsonDataTwo);
+    return compute(parsedAsesor, jsonDataTwo);
+  }
+  List<Assesor> parsedAsesor(String responseBdy){
+    final parsed = jsonDecode(responseBdy).cast<Map<String, dynamic>>();
+    return parsed.map<Assesor>((json)=>Assesor.fromJson(json)).toList();
   }
 }

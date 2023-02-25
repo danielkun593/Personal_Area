@@ -1,25 +1,27 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:ubik_gps_application_flutter/src/models/getDeviceUser.dart';
-import 'package:ubik_gps_application_flutter/src/models/sharedPreferencesClass.dart';
 
 class ApiDeviced{
-  UserPreferences userPreferences = UserPreferences();
-
   //GET DEVICES USER
-  Future<List<AllDevice>> getAllDevice()async{
-    List<AllDevice> listDevice = [];
-    var token = await userPreferences.getToken();
+  Future<List<AllDevice>> getAllDevice(http.Client client, String token)async{
     var urlDevice = "http://159.89.83.60:8080/Devices/get_devices";
     var dataHeader = {HttpHeaders.authorizationHeader: "Bearer $token"};
     final response = await http.get(Uri.parse(urlDevice), headers: dataHeader);
-    if(response.statusCode == 200){
-      var jsonData = jsonDecode(response.body);
-      for(var d in jsonData['response']){
-        listDevice.add(AllDevice(d));
-      }
-    }
-    return listDevice;
+    return compute(parsedDevice, response.body);
+  }
+
+  List<AllDevice> parsedDevice(String responseBdy){
+    final parsed = jsonDecode(responseBdy).cast<Map<String, dynamic>>();
+    return parsed.map<AllDevice>((json)=>AllDevice.fromJson(json)).toList();
+  }
+
+  Stream<List<AllDevice>> getListAllDevice(http.Client client, String token) async*{
+    var urlDevice = "http://159.89.83.60:8080/Devices/get_devices";
+    var dataHeader = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    final response = await http.get(Uri.parse(urlDevice), headers: dataHeader);
+    yield parsedDevice(response.body);
   }
 }

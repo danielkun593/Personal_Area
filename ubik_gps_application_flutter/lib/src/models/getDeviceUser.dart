@@ -1,10 +1,13 @@
 class AllDevice{
-  String deviceId;
+  final String deviceId;
 
-  AllDevice(this.deviceId);
+  AllDevice({this.deviceId});
 
-  AllDevice.fromJson(Map<String, dynamic> json):
-      deviceId = json['response'];
+  factory AllDevice.fromJson(Map<String, dynamic> json){
+    return AllDevice(
+      deviceId: json['response']
+    );
+  }
 
   Map<String, dynamic> toJson(){
     return{

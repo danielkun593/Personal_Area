@@ -1,19 +1,21 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:ubik_gps_application_flutter/components/buttonDesign.dart';
 import 'package:ubik_gps_application_flutter/components/circularButton.dart';
 import 'package:ubik_gps_application_flutter/components/decorationBackground.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_assesorlist.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_caller.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_renewplan.dart';
-import 'package:ubik_gps_application_flutter/src/functions/api_ubik.dart';
 import 'package:ubik_gps_application_flutter/src/functions/api_whatsapplink.dart';
 import 'package:ubik_gps_application_flutter/src/models/getAsessor.dart';
 import 'package:ubik_gps_application_flutter/src/models/getRenewPlan.dart';
 
 class RenewPlan extends StatefulWidget {
-  const RenewPlan({Key key}) : super(key: key);
+  const RenewPlan({Key key, @required this.token}) : super(key: key);
+
+  final String token;
 
   @override
   _RenewPlanState createState() => _RenewPlanState();
@@ -222,7 +224,7 @@ class _RenewPlanState extends State<RenewPlan>{
                                           const SizedBox(height: 15),
                                           ButtonWidget(
                                             function: (){
-                                              listDataPlan = apiRenew.dataRenew();
+                                              //listDataPlan = apiRenew.dataRenew();
                                               showDialog(
                                                   context: context,
                                                   builder: (context) => AlertDialog(
@@ -230,7 +232,7 @@ class _RenewPlanState extends State<RenewPlan>{
                                                     title: const Text("ESTADO DE CUENTAS",
                                                         textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
                                                     content: FutureBuilder(
-                                                        future: listDataPlan,
+                                                        future: apiRenew.dataRenew(http.Client(), widget.token),
                                                         builder: (context, snapshot){
                                                           if(snapshot.hasData){
                                                             return infoRenovar(snapshot.data);
@@ -270,7 +272,7 @@ class _RenewPlanState extends State<RenewPlan>{
                                 ButtonWidget(
                                   function: (){
                                     setState(() {
-                                      listAssesor = apiAssesor.asesorUser(asesor);
+                                      //listAssesor = apiAssesor.asesorUser(asesor);
                                       showDialog(
                                           context: context,
                                           builder: (context) => AlertDialog(
@@ -278,7 +280,7 @@ class _RenewPlanState extends State<RenewPlan>{
                                             title: const Text("ASESOR COMERCIAL",
                                                 textAlign: TextAlign.center, style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold)),
                                             content: FutureBuilder(
-                                                future: listAssesor,
+                                                future: apiAssesor.asesorUser(http.Client(), asesor, widget.token),
                                                 builder: (ctx, snapshot){
                                                   if(snapshot.hasData){
                                                     return infoAsesor(snapshot.data);
