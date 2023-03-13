@@ -33,7 +33,7 @@ class MapGps extends StatefulWidget {
 class MapGpsState extends State<MapGps> {
   //LatLong point = LatLong(-2.150430, -79.893929);
   double lat, lon;
-  String _currentAddress;
+  String _currentAddress, device;
   Position _currentPosition;
   LatLng punto, user;
   bool isVisible = false;
@@ -41,10 +41,11 @@ class MapGpsState extends State<MapGps> {
   bool blockDoor = false;
   bool blockCar = false;
   bool statusCommand;
-  int device;
+  String deviceID;
   List<String> door = ["Abrir Puertas", "Cerrar Puertas"];
   List<String> car = ["Bloqueo Activado", "Bloqueo Desactivado"];
   List<AllDevice> listDevicesAll; // list class device
+  List<AllDevice> listDevicesAlltoString; // list class device
   List<String> deviceItemList =[]; //convert future to string for dropdownbutton
   ApiUbik connectService = ApiUbik();
   ApiDeviced deviced = ApiDeviced();
@@ -56,9 +57,12 @@ class MapGpsState extends State<MapGps> {
     super.initState();
     mapController = MapController();
     listDispositivos(deviced.getAllDevice(http.Client(), widget.token));
-    deviceItemList.map((e){
-      device = int.parse(e);
+    deviced.getFirstDevice(http.Client(), widget.token).then((value){
+      setState(() {
+        deviceID = value;
+      });
     });
+
   }
 
   void listDispositivos(Future<List<AllDevice>> data)async{
@@ -67,6 +71,21 @@ class MapGpsState extends State<MapGps> {
       deviceItemList.add(listDevicesAll[x].deviceId);
     }
   }//Function Convert Future<list> to List
+  
+  List<Marker> _markers(LatLng data){
+    List<Marker> listPoint = [];
+    listPoint.add(Marker(
+      width: 40,
+      height: 40,
+      point: data,
+      builder: (ctx) => const Icon(
+        Icomoon.carUbik,
+        color: Colors.red,
+        size: 40,
+      ),
+    ));
+    return listPoint;
+  }//List markers map
 
   Future<void> _getAddressPosition(Position position) async {
     await placemarkFromCoordinates(_currentPosition.latitude, _currentPosition.longitude).then((List<Placemark> placemark) {
@@ -78,12 +97,15 @@ class MapGpsState extends State<MapGps> {
     }).catchError((e) {
       debugPrint(e);
     });
-  }
-  Future<LatLng> _getCurrentLocation(http.Client client) async {
+  }//Function general
+
+  Future<LatLng> _getCurrentLocation(http.Client client, String device) async {
+    int deviceId = int.parse(device);
     await Future.delayed(const Duration(seconds: 1));
-    var url = "http://159.89.83.60:8082/position/340";
+    var url = "http://159.89.83.60:8082/position/$deviceId";
     final response = await client.get(Uri.parse(url));
     var jsonData = jsonDecode(response.body);
+    print(jsonData);
     if(response.statusCode == 200){
       setState(() {
         punto = LatLng(jsonData['response'][0]['latitude'], jsonData['response'][0]['longitude']);
@@ -92,7 +114,8 @@ class MapGpsState extends State<MapGps> {
       });
     }
     return punto;
-  }
+  }//Function initial device in flutter map
+
   Future<void> positionSingle(http.Client client, int device, String imei, String command)async{
     try{
       //https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393'
@@ -133,7 +156,8 @@ class MapGpsState extends State<MapGps> {
   }
 
   static final DateTime now = DateTime.now();
-  mapFlutter(LatLng data, String address, DateTime time, MapController mapController, int deviceList){
+  mapFlutter(LatLng data, String address, DateTime time, MapController mapController, String deviceList){
+    int idDevice = int.parse(deviceList);
     Widget map;
     map = Stack(
       children: [
@@ -147,26 +171,17 @@ class MapGpsState extends State<MapGps> {
           ),
           children: [
             TileLayer(urlTemplate: AppConstants.urlOpenStreetMap, subdomains: const ['a', 'b', 'c']),
-            MarkerLayer(markers: [
-              Marker(
-                width: 40,
-                height: 40,
-                point: data,
-                builder: (ctx) => const Icon(
-                  Icomoon.carUbik,
-                  color: Colors.red,
-                  size: 40,
-                ),
-              ),
-            ]),
+            MarkerLayer(
+                markers: _markers(data)
+            ),
           ],
         ),//map Open Street Map
         Positioned(
             top: MediaQuery.of(context).size.height * 0.004,
             child: Container(
               padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.15,
-                  left: MediaQuery.of(context).size.width * 0.08,
+                  top: MediaQuery.of(context).size.height * 0.12,
+                  left: MediaQuery.of(context).size.width * 0.02,
                   right: MediaQuery.of(context).size.width * 0.08),
               child: FloatingActionButton(
                   elevation: 10,
@@ -175,14 +190,51 @@ class MapGpsState extends State<MapGps> {
                   },
                   child: isVisibleCard == true ? const Icon(Icons.visibility, size: 40) : const Icon(Icons.visibility_off, size: 40)
               ),
-            )), //widget reload
+            )), //widget view
+        Positioned(
+            top: MediaQuery.of(context).size.height * 0.004,
+            child: Container(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.12,
+                  left: MediaQuery.of(context).size.width * 0.18,
+                  right: MediaQuery.of(context).size.width * 0.08),
+              child: Container(
+                width: 300,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1),
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+                child: DropdownButton(
+                  hint: const Text("Seleccione el dispositivo"),
+                  icon: const Icon(Icons.arrow_drop_down),
+                  iconSize: 35,
+                  isExpanded: true,
+                  value: device,
+                  underline: Container(),
+                  style: const TextStyle(fontSize: 20, color: Colors.grey),
+                  onChanged: (value){
+                    setState((){
+                      device = value;
+                    });
+                  },
+                  items: deviceItemList.map((valueItem){
+                    return DropdownMenuItem(
+                        value: valueItem,
+                        child: Text(valueItem)
+                    );
+                  }).toList(),
+                ),
+              ),
+            )), //dropdown
         Positioned(
             top: MediaQuery.of(context).size.height * 0.005,
             left: MediaQuery.of(context).size.width * 0.7,
             child: Container(
               padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.15,
-                  left: MediaQuery.of(context).size.width * 0.08,
+                  top: MediaQuery.of(context).size.height * 0.12,
+                  left: MediaQuery.of(context).size.width * 0.16,
                   right: MediaQuery.of(context).size.width * 0.08),
               child: FloatingActionButton(elevation: 10, onPressed: () {}, child: const Icon(Icomoon.mapLocation, size: 40)),
             )), //widget map
@@ -191,18 +243,18 @@ class MapGpsState extends State<MapGps> {
             left: MediaQuery.of(context).size.width * 0.7,
             child: Container(
               padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.15,
-                  left: MediaQuery.of(context).size.width * 0.08,
+                  top: MediaQuery.of(context).size.height * 0.12,
+                  left: MediaQuery.of(context).size.width * 0.16,
                   right: MediaQuery.of(context).size.width * 0.08),
               child: FloatingActionButton(elevation: 10, onPressed: () {}, child: const Icon(Icomoon.trafficLight, size: 40)),
             )), //widget change to route map
         Positioned(
-            top: MediaQuery.of(context).size.height * 0.15,
+            top: MediaQuery.of(context).size.height * 0.12,
             left: MediaQuery.of(context).size.width * 0.7,
             child: Container(
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.15,
-                  left: MediaQuery.of(context).size.width * 0.08,
+                  left: MediaQuery.of(context).size.width * 0.16,
                   right: MediaQuery.of(context).size.width * 0.08),
               child: FloatingActionButton(elevation: 10, onPressed: () {
                 //_getCurrentPosition();
@@ -318,7 +370,7 @@ class MapGpsState extends State<MapGps> {
                         children: [
                           ButtonIconWidget2(
                             function: (){
-                              _getCurrentLocation(http.Client());
+                              _getCurrentLocation(http.Client(), deviceList);
                               mapController.move(data, 16);
                             },
                             namebutton: "Solicitar ubicacion",
@@ -483,7 +535,7 @@ class MapGpsState extends State<MapGps> {
                 child: Container(
                   padding: const EdgeInsets.all(5),
                   child: Row(
-                    children: cardDevice(deviceList, address, time, data),
+                    children: cardDevice(idDevice, address, time, data),
                   ),
                 ),
               ),
@@ -615,7 +667,7 @@ class MapGpsState extends State<MapGps> {
                             children: [
                               ButtonIconWidget2(
                                 function: (){
-                                  _getCurrentLocation(http.Client());
+                                  _getCurrentLocation(http.Client(), data.toString());
                                   mapController.move(point, 16);
                                 },
                                 namebutton: "Solicitar ubicacion",
@@ -816,14 +868,23 @@ class MapGpsState extends State<MapGps> {
     return cardDevice;
   }
 
+  widgetDevice(){
+    Widget widgetDevice;
+    widgetDevice =
+        FutureBuilder<List<AllDevice>>(
+            future: deviced.getAllDevice(http.Client(), widget.token),
+            builder: (ctx, snapshot){}
+        );
+  }
+
   //Location locationData;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _getCurrentLocation(http.Client()),
+        future: _getCurrentLocation(http.Client(), deviceID),
         builder: (ctx, snapshot){
           if(snapshot.hasData){
-            return mapFlutter(snapshot.data, _currentAddress, now, mapController, 340);
+            return mapFlutter(snapshot.data, _currentAddress, now, mapController, deviceID);
           }
           else if(snapshot.hasError){
             return Container();

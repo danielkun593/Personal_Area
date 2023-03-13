@@ -11,7 +11,6 @@ class ApiDeviced{
     var urlDevice = "http://159.89.83.60:8080/Devices/get_devices";
     var dataHeader = {HttpHeaders.authorizationHeader: "Bearer $token"};
     final response = await http.get(Uri.parse(urlDevice), headers: dataHeader);
-    print(response.body);
     if(response.statusCode == 200){
       var jsonData = jsonDecode(response.body);
       for(var d in jsonData['response']){
@@ -19,5 +18,17 @@ class ApiDeviced{
       }
     }
     return listDevice;
+  }
+
+  //GET DEVICES USER
+  Future<String> getFirstDevice(http.Client client, String token)async{
+    var urlDevice = "http://159.89.83.60:8080/Devices/get_devices";
+    var dataHeader = {HttpHeaders.authorizationHeader: "Bearer $token"};
+    final response = await http.get(Uri.parse(urlDevice), headers: dataHeader);
+    if(response.statusCode == 200){
+      var jsonData = jsonDecode(response.body);
+      var deviceId = jsonData['response'][0];
+      return deviceId;
+    }
   }
 }

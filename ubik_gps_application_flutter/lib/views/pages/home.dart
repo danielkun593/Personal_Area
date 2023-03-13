@@ -153,27 +153,6 @@ class _HomeState extends State<Home> {
       Toast.show(e.toString(), gravity: Toast.bottom, duration: Toast.lengthLong);
     }
   }
-  /*Future<void> positionSingle(http.Client client, int device, String imei, String command)async{
-    try{
-      //https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393'
-      //var url = Uri.parse("https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393");
-      LatLng locationPointer = await connectService.lastPositionSingle(client, device, imei, command);
-      if(locationPointer != null){
-        var url = Uri.parse("https://www.google.com/maps/search/?api=1&query=${locationPointer.latitude},${locationPointer.longitude}");
-        Share.share(url.toString());
-      }else{
-        var url = "http://159.89.83.60:8082/position/$device";
-        final response = await client.get(Uri.parse(url));
-        final jsonData = jsonDecode(response.body);
-        var urlGoogleMap = Uri.parse("https://www.google.com/maps/search/?api=1&query=${jsonData['response'][0]['latitude']},${jsonData['response'][0]['longitude']}");
-        Share.share(urlGoogleMap.toString());
-      }
-    }catch(e){
-      print(e);
-      ToastContext().init(context);
-      Toast.show(e.toString(), gravity: Toast.bottom, duration: Toast.lengthLong);
-    }
-  }*/
 
   @override
   void initState(){

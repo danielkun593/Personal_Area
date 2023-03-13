@@ -18,9 +18,6 @@ class Assets {
   static const String fontsIcomoon = 'lib/src/fonts/icomoon.eot';
   static const String fragmentAlertAlerts = 'lib/views/pages/fragment_home/fragment_alert/alerts.dart';
   static const String fragmentHomeAddBackground = 'lib/views/pages/fragment_home/add_background.dart';
-  static const String fragmentHomeListenDevice = 'lib/views/pages/fragment_home/listen_device.dart';
-  static const String fragmentHomeOpenDevice = 'lib/views/pages/fragment_home/open_device.dart';
-  static const String fragmentHomeParkingDevice = 'lib/views/pages/fragment_home/parking_device.dart';
   static const String fragmentHomeRenewPlan = 'lib/views/pages/fragment_home/renew_plan.dart';
   static const String fragmentHomeReportData = 'lib/views/pages/fragment_home/report_data.dart';
   static const String fragmentHomeSharedUbication = 'lib/views/pages/fragment_home/shared_ubication.dart';
