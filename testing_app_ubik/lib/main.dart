@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map_testing.dart';
+import 'package:testing_app_ubik/flutter_map_testing.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MapGps(token: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnbWVyaXphbGRlQGdtYWlsLmNvbSIsImlhdCI6MTY3ODczMTE3NiwiZXhwIjoxNjc5ODExMTc2fQ.B7_WC1G03I9vmEDZgMtbcRguNUIsc6IG6sy3F7gGAzw"),
     );
   }
 }
