@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:testing_app_ubik/src/models/getDeviceUser.dart';
+import 'package:testing_app_ubik/src/getAllDevice.dart';
 
 class ApiDeviced{
 
@@ -21,14 +21,17 @@ class ApiDeviced{
   }
 
   //GET DEVICES USER
-  Future<String> getFirstDevice(http.Client client, String token)async{
+  Future<List<String>> getFirstDevice(http.Client client, String token)async{
+    List<String> listString = [];
     var urlDevice = "http://159.89.83.60:8080/Devices/get_devices";
     var dataHeader = {HttpHeaders.authorizationHeader: "Bearer $token"};
     final response = await http.get(Uri.parse(urlDevice), headers: dataHeader);
     if(response.statusCode == 200){
       var jsonData = jsonDecode(response.body);
-      var deviceId = jsonData['response'][0];
-      return deviceId;
+      for(var i in jsonData['response']){
+        listString.add(i);
+      }
+      return listString;
     }
   }
 }

@@ -12,11 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Map Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MapGps(token: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnbWVyaXphbGRlQGdtYWlsLmNvbSIsImlhdCI6MTY3ODczMTE3NiwiZXhwIjoxNjc5ODExMTc2fQ.B7_WC1G03I9vmEDZgMtbcRguNUIsc6IG6sy3F7gGAzw"),
+      home: const MapFlutter(token: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnbWVyaXphbGRlQGdtYWlsLmNvbSIsImlhdCI6MTY3ODczMTE3NiwiZXhwIjoxNjc5ODExMTc2fQ.B7_WC1G03I9vmEDZgMtbcRguNUIsc6IG6sy3F7gGAzw")
     );
   }
 }

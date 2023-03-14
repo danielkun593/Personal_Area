@@ -4,7 +4,7 @@ class AllDevice{
   AllDevice(this.deviceId);
 
   AllDevice.fromJson(Map<String, dynamic> json):
-      deviceId = json['response'];
+        deviceId = json['response'];
 
   Map<String, dynamic> toJson(){
     return{
